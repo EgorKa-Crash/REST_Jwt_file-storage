@@ -19,9 +19,9 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override

@@ -5,28 +5,31 @@ import com.example.demoSpringSecurity.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
+    private static final String LOGIN_ENDPOINT = "/api/v1/auth/*";
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider();
+    @Autowired
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider){
+        this.jwtTokenProvider=jwtTokenProvider;
     }
 
     @Bean
@@ -38,14 +41,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET, "/api/v1/security/").authenticated()
+                .anyRequest()
+                .authenticated()
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider()));
+                .apply(new JwtConfigurer(jwtTokenProvider));
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

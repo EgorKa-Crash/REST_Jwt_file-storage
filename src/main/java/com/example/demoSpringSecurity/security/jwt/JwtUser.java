@@ -11,20 +11,14 @@ import java.util.Date;
 public class JwtUser implements UserDetails {
     private final Long id;
     private final String username;
-    private final String firstname;
-    private final String lastname;
     private final String password;
-    private final String email;
     private final boolean enabled;
     private final Date lastPasswordResetDate;
 
-    public JwtUser(Long id, String username, String firstname, String lastname, String password, String email, boolean enabled, Date lastPasswordResetDate) {
+    public JwtUser(Long id, String username, String password,  boolean enabled, Date lastPasswordResetDate) {
         this.id = id;
         this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
         this.password = password;
-        this.email = email;
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
@@ -66,18 +60,6 @@ public class JwtUser implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return false;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     @Override
