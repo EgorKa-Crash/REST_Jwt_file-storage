@@ -1,9 +1,9 @@
 package com.example.demoSpringSecurity.rest;
 
 import com.example.demoSpringSecurity.dto.AuthenticationRequestDto;
-import com.example.demoSpringSecurity.model.User;
+import com.example.demoSpringSecurity.entities.User;
 import com.example.demoSpringSecurity.security.jwt.JwtTokenProvider;
-import com.example.demoSpringSecurity.service.UserService;
+import com.example.demoSpringSecurity.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,20 +31,20 @@ public class AuthenticationRestControllerV1 {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
-            String username = requestDto.getUsername();
+            String login = requestDto.getUsername();
 
-            User user = userService.findByUsername(username);
+            User user = userService.findByLogin(login);
             if (user == null) {
-                throw new UsernameNotFoundException("User with username " + username + " not found");
+                throw new UsernameNotFoundException("User with login " + login + " not found");
             }
-            String token = jwtTokenProvider.createToken(username);
+            String token = jwtTokenProvider.createToken(login);
 
             Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
+            response.put("login", login);
             response.put("token", token);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("Invalid login or password");
         }
 
     }
@@ -55,7 +54,7 @@ public class AuthenticationRestControllerV1 {
         User user = userService.register(AuthenticationRequestDto.dtoToEntity(requestDto));
         userService.register(user);
         Map<Object, Object> response = new HashMap<>();
-        response.put("username", user.getUsername());
+        response.put("login", user.getLogin());
         return ResponseEntity.ok(response);
     }
 }

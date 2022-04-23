@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+    <property name="connection.url">jdbc:postgresql://localhost:5432/Posts</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.ProgressDialect</property>
+    <property name="hibernate.connection.username">Test</property>
+    <property name="hibernate.connection.password">1234</property>
+    <property name="show_sql">true</property>
+    <property name="hbm2ddl.auto">update</property>
+<!--    create-->
+    <mapping class="com.example.demoSpringSecurity.entities.User"/>
+<!--    <mapping class="com.example.ServletApp.entities.Groupp"/>-->
+<!--    <mapping class="com.example.ServletApp.entities.Post"/>-->
+<!--    <mapping class="com.example.ServletApp.entities.Subscriptions"/>-->
+<!--    -->
+<!--    <mapping class="com.example.ServletApp.entities.GroupOfUsers"/>-->
+  </session-factory>
+</hibernate-configuration>

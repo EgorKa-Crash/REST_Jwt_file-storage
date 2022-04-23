@@ -1,7 +1,7 @@
 package com.example.demoSpringSecurity.security.jwt;
 
-import com.example.demoSpringSecurity.model.Status;
-import com.example.demoSpringSecurity.model.User;
+import com.example.demoSpringSecurity.entities.Status;
+import com.example.demoSpringSecurity.entities.User;
 
 public final class JwtUserFactory {
     public JwtUserFactory() {
@@ -9,8 +9,8 @@ public final class JwtUserFactory {
 
     public static JwtUser create(User user){
         return new JwtUser(
-                user.getId(),
-                user.getUsername(),
+                user.getUserId(),
+                user.getLogin(),
                 user.getPassword(),
                 user.getStatus().equals(Status.ACTIVE),
                 user.getUpdated()

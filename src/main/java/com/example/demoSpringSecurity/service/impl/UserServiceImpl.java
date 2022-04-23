@@ -1,9 +1,8 @@
 package com.example.demoSpringSecurity.service.impl;
 
-import com.example.demoSpringSecurity.model.Status;
-import com.example.demoSpringSecurity.model.User;
-import com.example.demoSpringSecurity.repo.UserRepo;
-import com.example.demoSpringSecurity.service.UserService;
+import com.example.demoSpringSecurity.dao.UserDAO;
+import com.example.demoSpringSecurity.entities.Status;
+import com.example.demoSpringSecurity.entities.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,12 +14,12 @@ import java.util.List;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserRepo userRepo;
+    //private final UserRepo userRepo;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public UserServiceImpl() {
+        //this.userRepo = userRepo;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -29,28 +28,28 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Status.ACTIVE);
 
-        User registeredUser = userRepo.save(user);
-        log.info("IN register - user: {} successfully registered", registeredUser);
-        return registeredUser;
+        UserDAO.insertUser(user);
+        log.info("IN register - user: {} successfully registered", user);
+        return user;
     }
 
     @Override
     public List<User> getAll() {
-        List<User> result = userRepo.findAll();
+        List<User> result = UserDAO.getAllOfUsers();
         log.info("IN getAll - {} users found", result.size());
         return result;
     }
 
     @Override
-    public User findByUsername(String username) {
-        User result = userRepo.findByUsername(username);
-        log.info("IN findByUsername - {} found by username: {}", result, username);
+    public User findByLogin(String login) {
+        User result = UserDAO.findByLogin(login);
+        log.info("IN findByUsername - {} found by username: {}", result, login);
         return result;
     }
 
     @Override
     public User findById(Long id) {
-        User result = userRepo.findById(id).orElse(null);
+        User result = UserDAO.getUser(id);
         if (result == null) {
             log.warn("IN findById - no user found by id: {}", id);
             return null;
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        userRepo.deleteById(id);
+        UserDAO.deleteUser(id);
         log.info("IN delete - user with id: {} successfully deleted", id);
     }
 }
