@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/v1/auth/")
+@RequestMapping(value = "/auth/")
 public class AuthenticationRestControllerV1 {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -38,7 +38,6 @@ public class AuthenticationRestControllerV1 {
             if (user == null) {
                 throw new UsernameNotFoundException("User with username " + username + " not found");
             }
-
             String token = jwtTokenProvider.createToken(username);
 
             Map<Object, Object> response = new HashMap<>();
@@ -59,6 +58,4 @@ public class AuthenticationRestControllerV1 {
         response.put("username", user.getUsername());
         return ResponseEntity.ok(response);
     }
-
-
 }

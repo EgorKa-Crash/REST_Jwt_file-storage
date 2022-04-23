@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/security/")
+@RequestMapping("/security/")
 public class AuthRestControllerV2 {
 
     private final JwtTokenProvider jwtTokenProvider;

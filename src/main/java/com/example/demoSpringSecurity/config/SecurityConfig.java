@@ -23,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String LOGIN_ENDPOINT = "/api/v1/auth/*";
+    //private static final String LOGIN_ENDPOINT = "/auth/*";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -48,8 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/security/").authenticated()
+                .antMatchers("/auth/*").permitAll() //всех пропускать через данный путь
+                .antMatchers(HttpMethod.GET, "/security/").authenticated()
                 .anyRequest()
                 .authenticated()
                 .and()
