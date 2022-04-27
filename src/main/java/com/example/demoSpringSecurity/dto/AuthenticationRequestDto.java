@@ -5,13 +5,17 @@ import lombok.Data;
 
 @Data
 public class AuthenticationRequestDto {
-    private String username;
+    private String login;
     private String password;
+    private String nickName;
+    private String email;
 
     public static User dtoToEntity(AuthenticationRequestDto requestDto){
         User user = new User();
-        user.setLogin(requestDto.getUsername());
+        user.setLogin(requestDto.getLogin());
         user.setPassword(requestDto.getPassword());
+        user.setNickName(requestDto.getNickName());
+        user.setEmail(requestDto.getEmail());
         return user;
     }
 }

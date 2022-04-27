@@ -19,7 +19,8 @@ public class UserDAO {
             session.save(user);
             session.getTransaction().commit();
         } catch (Exception e) {
-            ErrorObj error = new ErrorObj(true, "Ошибка добавления пользователя");
+            ErrorObj.setIsAble(true);
+            ErrorObj.setMessange("Ошибка добавления пользователя"); 
         }
     }
 

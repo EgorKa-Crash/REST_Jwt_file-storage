@@ -48,6 +48,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByLoginSecure(String login, String password) {
+        User user = UserDAO.findByLogin(login);
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            log.info("IN findByUsername - {} found by username: {}", user, login);
+            return user;
+        }
+        return null;
+    }
+
+    @Override
     public User findById(Long id) {
         User result = UserDAO.getUser(id);
         if (result == null) {

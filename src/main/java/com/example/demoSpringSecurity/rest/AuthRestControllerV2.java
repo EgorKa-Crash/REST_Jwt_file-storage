@@ -1,15 +1,16 @@
 package com.example.demoSpringSecurity.rest;
 
 import com.example.demoSpringSecurity.dao.UserDAO;
+import com.example.demoSpringSecurity.entities.User;
 import com.example.demoSpringSecurity.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
-@RequestMapping("/security/")
+@RequestMapping("/token")
 public class AuthRestControllerV2 {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -19,10 +20,15 @@ public class AuthRestControllerV2 {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @GetMapping("/getAll")
-    public String getAll(@RequestHeader("Authorization") String token) {
+    @GetMapping("/getUser")
+    public ResponseEntity<User> getAll(@RequestHeader("Authorization") String token) {
         String stillToken = jwtTokenProvider.resolveToken(token);
 
-        return UserDAO.findByLogin(jwtTokenProvider.getUsername(stillToken)).toString();
+        User user = UserDAO.findByLogin(jwtTokenProvider.getUsername(stillToken));
+        return new ResponseEntity<>(user, HttpStatus.OK);
+
+//        return user != null
+//                ? new ResponseEntity<>(user, HttpStatus.OK)
+//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

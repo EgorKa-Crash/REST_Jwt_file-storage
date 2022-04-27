@@ -2,6 +2,7 @@ package com.example.demoSpringSecurity.rest;
 
 import com.example.demoSpringSecurity.dto.AuthenticationRequestDto;
 import com.example.demoSpringSecurity.entities.User;
+import com.example.demoSpringSecurity.exception.ErrorObj;
 import com.example.demoSpringSecurity.security.jwt.JwtTokenProvider;
 import com.example.demoSpringSecurity.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @RequestMapping(value = "/auth/")
 public class AuthenticationRestControllerV1 {
@@ -31,30 +33,35 @@ public class AuthenticationRestControllerV1 {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
-            String login = requestDto.getUsername();
+            String login = requestDto.getLogin();
+            String password = requestDto.getPassword();
 
-            User user = userService.findByLogin(login);
+            User user = userService.findByLoginSecure(login, password);
             if (user == null) {
                 throw new UsernameNotFoundException("User with login " + login + " not found");
             }
             String token = jwtTokenProvider.createToken(login);
 
             Map<Object, Object> response = new HashMap<>();
+            response.put("userId", user.getUserId());
             response.put("login", login);
             response.put("token", token);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid login or password");
         }
-
     }
 
     @PostMapping("/register")
     public ResponseEntity registration(@RequestBody AuthenticationRequestDto requestDto) {
         User user = userService.register(AuthenticationRequestDto.dtoToEntity(requestDto));
-        userService.register(user);
         Map<Object, Object> response = new HashMap<>();
         response.put("login", user.getLogin());
+        response.put("registerException", ErrorObj.isIsAble());
+        if (ErrorObj.isIsAble()) {
+            response.put("exceptionMessange", ErrorObj.getMessange());
+            ErrorObj.setIsAble(false);
+        }
         return ResponseEntity.ok(response);
     }
 }

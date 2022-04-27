@@ -12,6 +12,8 @@ public interface UserService {
 
       User findByLogin(String login);
 
+      User findByLoginSecure(String login, String password);
+
       User findById(Long id);
 
       void delete(Long id);
