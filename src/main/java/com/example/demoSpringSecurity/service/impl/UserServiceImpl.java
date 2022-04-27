@@ -3,7 +3,11 @@ package com.example.demoSpringSecurity.service.impl;
 import com.example.demoSpringSecurity.dao.UserDAO;
 import com.example.demoSpringSecurity.entities.Status;
 import com.example.demoSpringSecurity.entities.User;
+import com.example.demoSpringSecurity.hibernate.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +31,6 @@ public class UserServiceImpl implements UserService {
     public User register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(Status.ACTIVE);
-
         UserDAO.insertUser(user);
         log.info("IN register - user: {} successfully registered", user);
         return user;
@@ -72,5 +75,30 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         UserDAO.deleteUser(id);
         log.info("IN delete - user with id: {} successfully deleted", id);
+    }
+
+    @Override
+    public void update(User user) {
+         UserDAO.updateUser(user);
+    }
+
+    @Override
+    public List<User> getSubscribers(long id) {
+        return UserDAO.getSubscribers(id);
+    }
+
+    @Override
+    public List<User> getSubscriptions(long id) {
+        return UserDAO.getSubscriptions(id);
+    }
+
+    @Override
+    public List<User> getAllSearchResults(String substring) {
+        return UserDAO.getAllSearchResults(substring);
+    }
+
+    @Override
+    public List<User> readAll() {
+        return UserDAO.readAll();
     }
 }

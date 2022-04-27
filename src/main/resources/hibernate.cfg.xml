@@ -13,9 +13,10 @@
     <property name="hbm2ddl.auto">update</property>
 <!--    create-->
     <mapping class="com.example.demoSpringSecurity.entities.User"/>
+    <mapping class="com.example.demoSpringSecurity.entities.File"/>
 <!--    <mapping class="com.example.ServletApp.entities.Groupp"/>-->
 <!--    <mapping class="com.example.ServletApp.entities.Post"/>-->
-<!--    <mapping class="com.example.ServletApp.entities.Subscriptions"/>-->
+    <mapping class="com.example.demoSpringSecurity.entities.Subscriptions"/>
 <!--    -->
 <!--    <mapping class="com.example.ServletApp.entities.GroupOfUsers"/>-->
   </session-factory>

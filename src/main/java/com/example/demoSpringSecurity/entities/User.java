@@ -1,8 +1,7 @@
 package com.example.demoSpringSecurity.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 //import org.springframework.data.annotation.CreatedDate;
 //import org.springframework.data.annotation.LastModifiedDate;
 
@@ -11,7 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,17 +51,20 @@ public class User {
         updated = new Date();
     }
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true) //EAGER
-//    private List<Post> posts = new LinkedList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL,  orphanRemoval = true) //EAGER
+    private List<File> posts = new LinkedList<>();
 //
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 //    private List<GroupOfUsers> groupOfUsers = new LinkedList<>();
 //
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-//    private List<Subscriptions> subscriptions = new LinkedList<>();
-//
-//    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-//    private List<Subscriptions> subscribers = new LinkedList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL,  orphanRemoval = true)
+    private List<Subscriptions> subscriptions = new LinkedList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "subscriber", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //cascade = CascadeType.ALL, fetch = FetchType.EAGER,
+    private List<Subscriptions> subscribers = new LinkedList<>();
 
 //    public User(String login, String password, String email, String nickName) {
 //        this.login = login;

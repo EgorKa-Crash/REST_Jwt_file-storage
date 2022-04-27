@@ -17,4 +17,26 @@ public interface UserService {
       User findById(Long id);
 
       void delete(Long id);
+
+//      /**
+//       * Возвращает список всех имеющихся клиентов
+//       * @return список клиентов
+//       */
+//      List<Userr> readAll();
+//
+//      /**
+//       * Возвращает клиента по его ID
+//       * @param id - ID клиента
+//       * @return - объект клиента с заданным ID
+//       */
+//      Userr read(int id);
+
+
+      void update(User user);
+
+      List<User> getSubscribers(long id);
+      List<User> getSubscriptions(long id);
+      List<User> getAllSearchResults(String substring);
+
+      List<User> readAll();
 }
