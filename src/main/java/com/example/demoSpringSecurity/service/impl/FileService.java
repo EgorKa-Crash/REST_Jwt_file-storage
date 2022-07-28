@@ -1,51 +1,57 @@
 package com.example.demoSpringSecurity.service.impl;
 
+import com.example.demoSpringSecurity.dao.FileDAO;
 import com.example.demoSpringSecurity.entities.File;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface FileService {
+@Service
+public class FileService implements IFileService {
 
-    /**
-     * Создает нового клиента
-     *
-     * @param file - клиент для создания
-     */
-    void create(File file);
+    @Override
+    public void create(File file) {
+        FileDAO.create(file);
+    }
 
-    /**
-     * Возвращает список всех имеющихся клиентов
-     *
-     * @return список клиентов
-     */
-    //List<File> readAll();
+    @Override
+    public void update(File file) {
+        FileDAO.update(file);
+    }
 
-    /**
-     * Возвращает клиента по его ID
-     *
-     * @param id - ID клиента
-     * @return - объект клиента с заданным ID
-     */
-    //File read(int id);
+    @Override
+    public void delete(long id) {
+        File deletedFile = FileDAO.getFileById(id);
+        File perentFile = FileDAO.getFilePerent(deletedFile.getName());
+        perentFile.setParantFile(deletedFile.getParantFile());
+        FileDAO.update(perentFile);
+        FileDAO.delete(id);
+    }
 
-    /**
-     * Обновляет клиента с заданным ID,
-     * в соответствии с переданным клиентом
-     *
-     * @param file   - клиент в соответсвии с которым нужно обновить данные
-     */
-    void update(File file);
+    @Override
+    public List<File> getPublicFiles(long id) {
+        List<File> files = FileDAO.getPublicFiles(id);
+        List<Long> dellList = new ArrayList<>();
+        for(File file: files){
+            if(file.getParantFile() != null){
+                dellList.add(file.getParantFile().getFileId());
+            }
+        }
+        files.removeIf(value -> dellList.contains(value.getFileId()));
+        return files;
+    }
 
-    /**
-     * Удаляет клиента с заданным ID
-     *
-     * @param fileId - id клиента, которого нужно удалить
-     */
-    void delete(long fileId);
-
-    //List<File> getPublicFiles();
-
-    //List<File> getGroupFiles();
-
-    List<File> getPublicFiles(long id);
+    @Override
+    public List<File> getFiles(long id) {
+        List<File> files = FileDAO.getFiles(id);
+        List<Long> dellList = new ArrayList<>();
+        for(File file: files){
+            if(file.getParantFile() != null){
+                dellList.add(file.getParantFile().getFileId());
+            }
+        }
+        files.removeIf(value -> dellList.contains(value.getFileId()));
+        return  files;
+    }
 }

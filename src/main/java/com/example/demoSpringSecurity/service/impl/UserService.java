@@ -1,42 +1,98 @@
 package com.example.demoSpringSecurity.service.impl;
 
+import com.example.demoSpringSecurity.dao.UserDAO;
+import com.example.demoSpringSecurity.entities.Status;
 import com.example.demoSpringSecurity.entities.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserService {
+@Service
+@Slf4j
+public class UserService implements IUserService {
 
-      User register(User user);
+    private final BCryptPasswordEncoder passwordEncoder;
 
-      List<User> getAll();
+    @Autowired
+    public UserService() {
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
-      User findByLogin(String login);
+    @Override
+    public User register(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setStatus(Status.ACTIVE);
+        UserDAO.insertUser(user);
+        log.info("IN register - user: {} successfully registered", user);
+        return user;
+    }
 
-      User findByLoginSecure(String login, String password);
+    @Override
+    public List<User> getAll() {
+        List<User> result = UserDAO.getAllOfUsers();
+        log.info("IN getAll - {} users found", result.size());
+        return result;
+    }
 
-      User findById(Long id);
+    @Override
+    public User findByLogin(String login) {
+        User result = UserDAO.findByLogin(login);
+        log.info("IN findByUsername - {} found by username: {}", result, login);
+        return result;
+    }
 
-      void delete(Long id);
+    @Override
+    public User findByLoginSecure(String login, String password) {
+        User user = UserDAO.findByLogin(login);
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            log.info("IN findByUsername - {} found by username: {}", user, login);
+            return user;
+        }
+        return null;
+    }
 
-//      /**
-//       * Возвращает список всех имеющихся клиентов
-//       * @return список клиентов
-//       */
-//      List<Userr> readAll();
-//
-//      /**
-//       * Возвращает клиента по его ID
-//       * @param id - ID клиента
-//       * @return - объект клиента с заданным ID
-//       */
-//      Userr read(int id);
+    @Override
+    public User findById(Long id) {
+        User result = UserDAO.getUser(id);
+        if (result == null) {
+            log.warn("IN findById - no user found by id: {}", id);
+            return null;
+        }
+        log.info("IN findByUsername - {} found by id: {}", result, id);
+        return result;
+    }
 
+    @Override
+    public void delete(Long id) {
+        UserDAO.deleteUser(id);
+        log.info("IN delete - user with id: {} successfully deleted", id);
+    }
 
-      void update(User user);
+    @Override
+    public void update(User user) {
+         UserDAO.updateUser(user);
+    }
 
-      List<User> getSubscribers(long id);
-      List<User> getSubscriptions(long id);
-      List<User> getAllSearchResults(String substring);
+    @Override
+    public List<User> getSubscribers(long id) {
+        return UserDAO.getSubscribers(id);
+    }
 
-      List<User> readAll();
+    @Override
+    public List<User> getSubscriptions(long id) {
+        return UserDAO.getSubscriptions(id);
+    }
+
+    @Override
+    public List<User> getAllSearchResults(String substring) {
+        return UserDAO.getAllSearchResults(substring);
+    }
+
+    @Override
+    public List<User> readAll() {
+        return UserDAO.readAll();
+    }
 }

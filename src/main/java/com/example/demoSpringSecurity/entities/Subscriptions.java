@@ -3,8 +3,7 @@ package com.example.demoSpringSecurity.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,24 +12,22 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @IdClass(SubscriptionsPK.class)
 public class Subscriptions {
-
-//    @Id
-//    @GeneratedValue
-//    private Long subscriptionsId;
-//    @EmbeddedId
-//    private SubscriptionsPK subscriptionsPK;
-
     @Id
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
-//
+
     @Id
     @ManyToOne
     @JoinColumn(name = "subscriberId")
     private User subscriber;
 
-    private Timestamp subscriptionDate;
+    private Date subscriptionDate;
+
+    @PrePersist
+    protected void onCreate() {
+        subscriptionDate = new Date();
+    }
 
     public Subscriptions(User user, User subscriber) {
         this.user = user;

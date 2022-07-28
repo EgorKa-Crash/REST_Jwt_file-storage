@@ -27,8 +27,5 @@ public class AuthRestControllerV2 {
         User user = UserDAO.findByLogin(jwtTokenProvider.getUsername(stillToken));
         return new ResponseEntity<>(user, HttpStatus.OK);
 
-//        return user != null
-//                ? new ResponseEntity<>(user, HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

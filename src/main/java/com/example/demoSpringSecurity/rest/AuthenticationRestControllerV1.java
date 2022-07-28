@@ -4,7 +4,7 @@ import com.example.demoSpringSecurity.dto.AuthenticationRequestDto;
 import com.example.demoSpringSecurity.entities.User;
 import com.example.demoSpringSecurity.exception.ErrorObj;
 import com.example.demoSpringSecurity.security.jwt.JwtTokenProvider;
-import com.example.demoSpringSecurity.service.impl.UserService;
+import com.example.demoSpringSecurity.service.impl.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,10 +22,10 @@ public class AuthenticationRestControllerV1 {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final UserService userService;
+    private final IUserService userService;
 
     @Autowired
-    public AuthenticationRestControllerV1(JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public AuthenticationRestControllerV1(JwtTokenProvider jwtTokenProvider, IUserService userService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
@@ -46,6 +46,7 @@ public class AuthenticationRestControllerV1 {
             response.put("userId", user.getUserId());
             response.put("login", login);
             response.put("token", token);
+            response.put("nickName", user.getNickName());
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid login or password");

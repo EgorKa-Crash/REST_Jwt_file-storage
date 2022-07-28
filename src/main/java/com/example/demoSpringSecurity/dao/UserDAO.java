@@ -1,6 +1,4 @@
 package com.example.demoSpringSecurity.dao;
-
-import com.example.demoSpringSecurity.entities.Subscriptions;
 import com.example.demoSpringSecurity.entities.User;
 import com.example.demoSpringSecurity.exception.ErrorObj;
 import com.example.demoSpringSecurity.hibernate.HibernateUtil;
@@ -50,7 +48,6 @@ public class UserDAO {
         }
     }
 
-
     public static User findByLogin(String login) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query query = session.createQuery("FROM User WHERE login = :login");
@@ -84,43 +81,18 @@ public class UserDAO {
 
 
     public static List<User> getSubscribers(long id) {
-        //List<User> userrs;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            //Query query = session.createQuery(" FROM User WHERE userId in (select subscriber from Subscriptin where userId ="+id+") ORDER BY nickName");
-//            User user = getUser(1L);
-//            List<Subscriptions> sub = user.getSubscribers();
-//            List<User> us = (List<User>)sub.stream().map(x -> x.getSubscriber());
-//
-            //return  (List<User>) getUser(id).getSubscribers().stream().map(x -> x.getSubscriber());
-
-            //Query query = session.createQuery(" FROM User WHERE userId in (select subscriber from Subscriptions where userId ="+id+") ORDER BY nickName");
             Query query = session.createQuery(" select subscriber FROM Subscriptions s WHERE s.user.userId = :id ORDER BY  s.subscriber.nickName"); // WHERE user.userId =" + id + "
             query.setParameter("id", id);
-            return  query.list();
+            return query.list();
         }
-
-//        Query query = session.createQuery(" FROM Userr WHERE userId in (select subscriberId from Subscriptin where userId ="+id+") ORDER BY nickName");
-//        userrs = query.list();
-//
-//        return userrs;
     }
 
     public static List<User> getSubscriptions(long id) {
-//        List<User> userrs;
-//        Session session = HibernateUtil.getSessionFactory().openSession();
-//        session.getTransaction().begin();
-//        Query query = session.createQuery("FROM Userr WHERE userId in (select userId from Subscriptin where subscriberId ="+id+") ORDER BY nickName");
-//        userrs = query.list();
-//        session.close();
-//        return userrs;
-
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            //Query query = session.createQuery("SELECT user FROM Subscriptions WHERE subscriber.userId =" + id + " ORDER BY user.nickName");
-            //return query.list();
-            //return  (List<User>) getUser(id).getSubscriptions().stream().map(x -> x.getUser());
             Query query = session.createQuery(" select user FROM Subscriptions s WHERE s.subscriber.userId = :id ORDER BY  s.user.nickName"); // WHERE user.userId =" + id + "
             query.setParameter("id", id);
-            return  query.list();
+            return query.list();
         }
     }
 
@@ -130,13 +102,6 @@ public class UserDAO {
             Query query = session.createQuery("FROM User WHERE nickName like '%" + substring + "%'ORDER BY nickName");//"+substring+"
             return query.list();
         }
-
-//        Query query = session.createQuery("FROM User WHERE nickName like '%"+substring+"%'ORDER BY nickName");//"+substring+"
-//        userrs = query.list();
-//        session.close();
-//        return userrs;
-
-
     }
 
     public static List<User> readAll() {
@@ -145,7 +110,6 @@ public class UserDAO {
         session.getTransaction().begin();
         Criteria criteria = session.createCriteria(User.class);
         userrs = criteria.list();
-        //session.getTransaction().commit();
         session.close();
         return userrs;
     }

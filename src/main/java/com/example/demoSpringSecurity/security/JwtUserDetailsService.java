@@ -14,13 +14,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class JwtUserDetailsService implements UserDetailsService {
 
-//    private final UserRepo userRepo;
-//
-//    @Autowired
-//    public JwtUserDetailsService(UserRepo userRepo) {
-//        this.userRepo = userRepo;
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User user = UserDAO.findByLogin(login);
